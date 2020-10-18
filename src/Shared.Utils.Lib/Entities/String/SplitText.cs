@@ -4,15 +4,11 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 {
     public class SplitText
     {
-        private readonly string _input;
-        private readonly StringSplitOptions _options;
-        private readonly string _separator;
+        private readonly Lazy<string[]> _lazyValue;
 
         public SplitText(string input, StringSplitOptions options = StringSplitOptions.None, string separator = " ")
         {
-            _separator = separator;
-            _options   = options;
-            _input     = input ?? "";
+            _lazyValue = new Lazy<string[]>(() => Split(input ?? "", options, separator));
         }
 
         public static implicit operator string[](SplitText obj)
@@ -22,7 +18,12 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public string[] GetValue()
         {
-            return _input.Split(new[] { _separator }, _options);
+            return _lazyValue.Value;
+        }
+
+        private string[] Split(string input, StringSplitOptions options, string separator)
+        {
+            return input.Split(new[] { separator }, options);
         }
     }
 }

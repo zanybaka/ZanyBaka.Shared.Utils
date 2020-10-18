@@ -5,17 +5,11 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 {
     public class ReplaceText
     {
-        private readonly StringComparison _comparison;
-        private readonly string _input;
-        private readonly string _new;
-        private readonly string _old;
+        private readonly Lazy<string> _lazyValue;
 
         public ReplaceText(string input, string old, string @new, StringComparison comparison = StringComparison.CurrentCulture)
         {
-            _old        = old;
-            _new        = @new;
-            _comparison = comparison;
-            _input      = input ?? "";
+            _lazyValue = new Lazy<string>(() => Replace(input ?? "", old, @new, comparison));
         }
 
         public static implicit operator string(ReplaceText obj)
@@ -25,7 +19,19 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public string GetValue()
         {
-            return _input.Replace(_old, _new, _comparison);
+            return _lazyValue.Value;
+        }
+
+        public override string ToString()
+        {
+            return GetValue();
+        }
+
+        // TODO: support NET5_0, NETCOREAPP symbols
+        private string Replace(string input, string old, string @new, StringComparison comparison)
+        {
+            // NETSTANDARD2_0 || NETFRAMEWORK
+            return input.Replace(old, @new, comparison);
         }
     }
 }

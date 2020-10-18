@@ -12,6 +12,11 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
 
         public WebPage(string url)
         {
+            if (url == null)
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
             _url = url;
         }
 
@@ -72,9 +77,11 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
                 encoding = Encoding.GetEncoding(1251);
             }
 
-            StreamReader reader  = new StreamReader(stream, encoding);
-            string       content = reader.ReadToEnd();
-            return content;
+            using (StreamReader reader = new StreamReader(stream, encoding))
+            {
+                string content = reader.ReadToEnd();
+                return content;
+            }
         }
     }
 }

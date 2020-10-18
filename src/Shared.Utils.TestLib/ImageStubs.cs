@@ -8,7 +8,7 @@ namespace ZanyBaka.Shared.Utils.TestLib
     {
         public static Image CreateImageStub()
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new MemoryStream(); // do not dispose
             new Bitmap(10, 10).Save(ms, ImageFormat.Jpeg);
             return Image.FromStream(ms);
         }

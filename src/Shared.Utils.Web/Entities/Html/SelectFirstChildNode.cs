@@ -21,17 +21,17 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
 
         public static implicit operator HtmlNode(SelectFirstChildNode obj)
         {
-            return obj.GetValue();
-        }
-
-        public HtmlNode GetValue()
-        {
-            return _node.SelectSingleNode(_xPathSelector);
+            return obj.Select();
         }
 
         public override string ToString()
         {
             return _xPathSelector;
+        }
+
+        private HtmlNode Select()
+        {
+            return _node.SelectSingleNode(_xPathSelector);
         }
     }
 }

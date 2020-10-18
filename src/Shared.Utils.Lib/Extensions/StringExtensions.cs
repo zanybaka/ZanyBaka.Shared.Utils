@@ -91,6 +91,8 @@ namespace ZanyBaka.Shared.Utils.Lib.Extensions
         ///     If <paramref name="oldValue" /> is not found in the current instance, the method returns the current instance
         ///     unchanged.
         /// </returns>
+        // TODO: support NET5_0, NETCOREAPP symbols
+        // NETSTANDARD2_0 || NETFRAMEWORK
         [DebuggerStepThrough]
         public static string Replace(this string input,
                                      string oldValue, string newValue,

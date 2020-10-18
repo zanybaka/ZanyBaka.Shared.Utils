@@ -15,6 +15,16 @@ namespace ZanyBaka.Shared.Utils.Lib.Extensions
             return source.Skip(2).First();
         }
 
+        public static TSource SecondOrDefault<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Skip(1).FirstOrDefault();
+        }
+
+        public static TSource ThirdOrDefault<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.Skip(2).FirstOrDefault();
+        }
+
         public static IEnumerable<TSource> TakeFrom<TSource>(this IEnumerable<TSource> source, int startIndex, int count)
         {
             return source.Skip(startIndex).Take(count);

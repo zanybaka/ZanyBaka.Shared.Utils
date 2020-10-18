@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 
 namespace ZanyBaka.Shared.Utils.Lib.Entities.String
@@ -9,16 +10,21 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public IsMatchWildcard(string input, string wildcard)
         {
-            _input    = input;
+            if (string.IsNullOrEmpty(wildcard))
+            {
+                throw new ArgumentException(nameof(wildcard));
+            }
+
+            _input    = input ?? "";
             _wildcard = wildcard;
         }
 
         public static implicit operator bool(IsMatchWildcard obj)
         {
-            return obj.GetValue();
+            return obj.IsMatch();
         }
 
-        public bool GetValue()
+        private bool IsMatch()
         {
             return Regex.IsMatch(_input, new WildcardToRegular(_wildcard));
         }

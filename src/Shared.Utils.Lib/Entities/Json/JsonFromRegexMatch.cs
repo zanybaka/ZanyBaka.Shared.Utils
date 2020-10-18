@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using ZanyBaka.Shared.Utils.Lib.Entities.String;
@@ -6,15 +7,21 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 {
     public class JsonFromRegexMatch
     {
-        private readonly string[] _groupNames;
-        private readonly Match _match;
-        private readonly bool _trim;
+        private readonly Lazy<string> _lazyValue;
 
         public JsonFromRegexMatch(Match match, string[] groupNames, bool trim)
         {
-            _match      = match;
-            _groupNames = groupNames;
-            _trim       = trim;
+            if (match == null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            if (groupNames == null)
+            {
+                throw new ArgumentNullException(nameof(groupNames));
+            }
+
+            _lazyValue = new Lazy<string>(() => Create(match, groupNames, trim));
         }
 
         public static implicit operator string(JsonFromRegexMatch obj)
@@ -24,7 +31,12 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 
         public string GetValue()
         {
-            return Create(_match, _groupNames, _trim);
+            return _lazyValue.Value;
+        }
+
+        public override string ToString()
+        {
+            return GetValue();
         }
 
         private static string Create(Match match, string[] groupNames, bool trim)

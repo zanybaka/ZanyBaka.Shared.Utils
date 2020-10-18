@@ -6,7 +6,7 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.IO
 
         public FilePath(string path)
         {
-            _path = path;
+            _path = path ?? "";
         }
 
         public override string ToString()

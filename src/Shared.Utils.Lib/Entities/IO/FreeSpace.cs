@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace ZanyBaka.Shared.Utils.Lib.Entities.IO
@@ -5,30 +6,38 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.IO
     public class FreeSpace
     {
         private readonly Drive _drive;
-        private long? _value;
+        private long? _lazyValue;
 
         public FreeSpace(Drive drive)
         {
+            if (drive == null)
+            {
+                throw new ArgumentNullException(nameof(drive));
+            }
+
             _drive = drive;
         }
 
-        public long Value()
+        /// <returns>Returns -1 if any issues with the specified drive</returns>
+        public long GetValue()
         {
-            if (!_value.HasValue)
+            if (_lazyValue.HasValue)
             {
-                string drive = _drive.ToString();
-                try
-                {
-                    DriveInfo driveInfo = new DriveInfo(drive);
-                    _value = driveInfo.AvailableFreeSpace;
-                }
-                catch (IOException)
-                {
-                    _value = -1;
-                }
+                return _lazyValue.Value;
             }
 
-            return _value.Value;
+            string drive = _drive.ToString();
+            try
+            {
+                DriveInfo driveInfo = new DriveInfo(drive);
+                _lazyValue = driveInfo.AvailableFreeSpace;
+            }
+            catch (IOException)
+            {
+                _lazyValue = -1;
+            }
+
+            return _lazyValue.Value;
         }
     }
 }

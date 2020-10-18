@@ -5,23 +5,31 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
 {
     public class CleanHtmlLite
     {
-        private readonly Lazy<string> _cleanHtml;
-        private readonly string _html;
+        private readonly Lazy<string> _lazyValue;
 
         public CleanHtmlLite(string html, Func<bool> condition)
         {
-            _html      = html;
-            _cleanHtml = new Lazy<string>(() => CleanHtml(_html, condition));
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            _lazyValue = new Lazy<string>(() => CleanHtml(html ?? "", condition));
         }
 
         public static implicit operator string(CleanHtmlLite obj)
         {
-            return obj._cleanHtml.Value;
+            return obj.GetValue();
+        }
+
+        public string GetValue()
+        {
+            return _lazyValue.Value;
         }
 
         public override string ToString()
         {
-            return _html;
+            return GetValue();
         }
 
         private string CleanHtml(string html, Func<bool> condition)

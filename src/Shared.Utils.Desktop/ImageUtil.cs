@@ -6,28 +6,33 @@ using System.Net;
 
 namespace ZanyBaka.Shared.Utils.Desktop
 {
-    public class ImageUtil
+    public static class ImageUtil
     {
-        public static Image GetImage(string url)
+        public static Image GetImage(this string url)
         {
-            HttpWebRequest  httpWebRequest  = (HttpWebRequest) WebRequest.Create(url);
-            HttpWebResponse httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse();
-            using (Stream stream = httpWebResponse.GetResponseStream())
+            if (url == null)
             {
-                if (stream == null)
-                {
-                    return null;
-                }
-
-                return Image.FromStream(stream);
+                throw new ArgumentNullException();
             }
+
+            HttpWebRequest httpWebRequest = (HttpWebRequest) WebRequest.Create(url);
+            using (HttpWebResponse httpWebResponse = (HttpWebResponse) httpWebRequest.GetResponse())
+                using (Stream stream = httpWebResponse.GetResponseStream())
+                {
+                    if (stream == null)
+                    {
+                        return null;
+                    }
+
+                    return Image.FromStream(stream);
+                }
         }
 
-        public static string ImageToBase64String(Image image)
+        public static string ImageToBase64String(this Image image)
         {
             if (image == null)
             {
-                return null;
+                throw new ArgumentNullException();
             }
 
             using (MemoryStream ms = new MemoryStream())
@@ -38,11 +43,11 @@ namespace ZanyBaka.Shared.Utils.Desktop
             }
         }
 
-        public static Image Base64StringToImage(string imageString)
+        public static Image Base64StringToImage(this string imageString)
         {
             if (imageString == null)
             {
-                return null;
+                throw new ArgumentNullException();
             }
 
             byte[] array = Convert.FromBase64String(imageString);

@@ -13,12 +13,17 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public static implicit operator string(LowerText obj)
         {
-            return obj.ToString();
+            return obj.GetValue();
+        }
+
+        public string GetValue()
+        {
+            return _lazyValue.Value;
         }
 
         public override string ToString()
         {
-            return _lazyValue.Value;
+            return GetValue();
         }
     }
 }

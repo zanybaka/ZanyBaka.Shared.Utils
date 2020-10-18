@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 
 namespace ZanyBaka.Shared.Utils.Lib.Entities.String
@@ -8,15 +9,20 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public WildcardToRegular(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException(nameof(input));
+            }
+
             _input = input;
         }
 
         public static implicit operator string(WildcardToRegular obj)
         {
-            return obj.GetValue();
+            return obj.Convert();
         }
 
-        public string GetValue()
+        private string Convert()
         {
             return "^" + Regex.Escape(_input).Replace("\\?", ".").Replace("\\*", ".*") + "$";
         }

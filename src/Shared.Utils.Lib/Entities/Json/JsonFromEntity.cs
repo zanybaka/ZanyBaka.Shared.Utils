@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -6,11 +7,15 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 {
     public class JsonFromEntity
     {
-        private readonly object _input;
+        private readonly Lazy<string> _lazyValue;
 
-        public JsonFromEntity(object input)
+        public JsonFromEntity(object input) : this(input, Encoding.UTF8)
         {
-            _input = input;
+        }
+
+        public JsonFromEntity(object input, Encoding encoding)
+        {
+            _lazyValue = new Lazy<string>(() => CreateJsonFromEntity(input, encoding));
         }
 
         public static implicit operator string(JsonFromEntity obj)
@@ -20,21 +25,26 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 
         public string GetValue()
         {
-            return Create(_input);
+            return _lazyValue.Value;
         }
 
-        private static string Create(object entity)
+        public override string ToString()
+        {
+            return GetValue();
+        }
+
+        private static string CreateJsonFromEntity(object entity, Encoding encoding)
         {
             var serializer = new DataContractJsonSerializer(entity.GetType());
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = JsonReaderWriterFactory.CreateJsonWriter(stream, Encoding.UTF8))
+                using (var writer = JsonReaderWriterFactory.CreateJsonWriter(stream, encoding))
                 {
                     serializer.WriteObject(writer, entity);
                 }
 
-                return Encoding.UTF8.GetString(stream.ToArray());
+                return encoding.GetString(stream.ToArray());
             }
         }
     }

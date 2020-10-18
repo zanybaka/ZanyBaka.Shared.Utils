@@ -7,17 +7,22 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
     public class HtmlToHtmlNode
     {
         private readonly string _html;
-        private readonly Lazy<HtmlNode> _htmlNode;
+        private readonly Lazy<HtmlNode> _lazyValue;
 
         public HtmlToHtmlNode(string html)
         {
-            _html     = html;
-            _htmlNode = new Lazy<HtmlNode>(() => ParseHtml(_html));
+            _html      = html;
+            _lazyValue = new Lazy<HtmlNode>(() => ParseHtml(_html));
         }
 
         public static implicit operator HtmlNode(HtmlToHtmlNode obj)
         {
-            return obj._htmlNode.Value;
+            return obj.GetValue();
+        }
+
+        public HtmlNode GetValue()
+        {
+            return _lazyValue.Value;
         }
 
         public override string ToString()

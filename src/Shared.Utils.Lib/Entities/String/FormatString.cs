@@ -1,3 +1,5 @@
+using System;
+
 namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 {
     public class FormatString
@@ -7,16 +9,21 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public FormatString(string input, params object[] args)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             _input = input;
             _args  = args;
         }
 
         public static implicit operator string(FormatString obj)
         {
-            return obj.GetValue();
+            return obj.ToString();
         }
 
-        public string GetValue()
+        public override string ToString()
         {
             return string.Format(_input, _args);
         }

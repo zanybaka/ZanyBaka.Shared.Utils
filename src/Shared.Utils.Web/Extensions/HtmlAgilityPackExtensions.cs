@@ -16,17 +16,19 @@ namespace ZanyBaka.Shared.Utils.Web.Extensions
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            StringWriter sw = new StringWriter();
-            ConvertTo(doc.DocumentNode, sw);
-            sw.Flush();
-            return sw.ToString();
+            using (StringWriter sw = new StringWriter())
+            {
+                ConvertTo(doc.DocumentNode, sw);
+                sw.Flush();
+                return sw.ToString();
+            }
         }
 
         private static void ConvertContentTo(HtmlNode node, TextWriter outText)
         {
-            foreach (HtmlNode subnode in node.ChildNodes)
+            foreach (HtmlNode subNode in node.ChildNodes)
             {
-                ConvertTo(subnode, outText);
+                ConvertTo(subNode, outText);
             }
         }
 

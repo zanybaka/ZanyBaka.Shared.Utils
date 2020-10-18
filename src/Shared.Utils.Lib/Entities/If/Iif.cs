@@ -4,15 +4,16 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.If
 {
     public class Iif<TResult>
     {
-        private readonly Func<bool> _condition;
-        private readonly TResult _falseResult;
-        private readonly TResult _trueResult;
+        private readonly Lazy<TResult> _lazyValue;
 
         public Iif(Func<bool> condition, TResult trueResult, TResult falseResult)
         {
-            _condition   = condition;
-            _trueResult  = trueResult;
-            _falseResult = falseResult;
+            if (condition == null || trueResult == null || falseResult == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            _lazyValue = new Lazy<TResult>(() => condition() ? trueResult : falseResult);
         }
 
         public static implicit operator TResult(Iif<TResult> obj)
@@ -22,7 +23,7 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.If
 
         public TResult GetValue()
         {
-            return _condition() ? _trueResult : _falseResult;
+            return _lazyValue.Value;
         }
 
         public override string ToString()

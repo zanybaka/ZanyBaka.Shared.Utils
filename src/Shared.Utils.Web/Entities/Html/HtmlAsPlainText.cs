@@ -5,23 +5,26 @@ namespace ZanyBaka.Shared.Utils.Web.Entities.Html
 {
     public class HtmlAsPlainText
     {
-        private readonly string _html;
-        private readonly Lazy<string> _plainText;
+        private readonly Lazy<string> _lazyValue;
 
         public HtmlAsPlainText(string html)
         {
-            _html      = html;
-            _plainText = new Lazy<string>(() => _html.ConvertToPlainText());
+            _lazyValue = new Lazy<string>(() => (html ?? "").ConvertToPlainText());
         }
 
         public static implicit operator string(HtmlAsPlainText obj)
         {
-            return obj._plainText.Value;
+            return obj.GetValue();
+        }
+
+        public string GetValue()
+        {
+            return _lazyValue.Value;
         }
 
         public override string ToString()
         {
-            return _html;
+            return GetValue();
         }
     }
 }

@@ -1,16 +1,14 @@
+using System;
+
 namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 {
     public class ReplaceChar
     {
-        private readonly string _input;
-        private readonly char _new;
-        private readonly char _old;
+        private readonly Lazy<string> _lazyValue;
 
         public ReplaceChar(string input, char old, char @new)
         {
-            _old   = old;
-            _new   = @new;
-            _input = input ?? "";
+            _lazyValue = new Lazy<string>(() => Replace(input ?? "", old, @new));
         }
 
         public static implicit operator string(ReplaceChar obj)
@@ -20,7 +18,17 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.String
 
         public string GetValue()
         {
-            return _input.Replace(_old, _new);
+            return _lazyValue.Value;
+        }
+
+        public override string ToString()
+        {
+            return GetValue();
+        }
+
+        private string Replace(string input, char old, char @new)
+        {
+            return input.Replace(old, @new);
         }
     }
 }

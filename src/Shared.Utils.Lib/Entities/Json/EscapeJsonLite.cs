@@ -9,17 +9,27 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 
         public EscapeJsonLite(string input)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             _lazyValue = new Lazy<string>(() => Escape(input));
         }
 
         public static implicit operator string(EscapeJsonLite obj)
         {
-            return obj.ToString();
+            return obj.GetValue();
+        }
+
+        public string GetValue()
+        {
+            return _lazyValue.Value;
         }
 
         public override string ToString()
         {
-            return _lazyValue.Value;
+            return GetValue();
         }
 
         private static string Escape(string value)

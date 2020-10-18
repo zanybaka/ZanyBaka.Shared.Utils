@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -7,11 +8,20 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 {
     public class EntityFromJson<TEntity>
     {
-        private readonly string _input;
+        private readonly Lazy<TEntity> _lazyValue;
 
-        public EntityFromJson(string input)
+        public EntityFromJson(string input) : this(input, Encoding.UTF8)
         {
-            _input = input ?? "";
+        }
+
+        public EntityFromJson(string input, Encoding encoding)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            _lazyValue = new Lazy<TEntity>(() => CreateEntityFromJson(input, encoding));
         }
 
         public static implicit operator TEntity(EntityFromJson<TEntity> obj)
@@ -21,20 +31,20 @@ namespace ZanyBaka.Shared.Utils.Lib.Entities.Json
 
         public TEntity GetValue()
         {
-            return Create(_input);
+            return _lazyValue.Value;
         }
 
-        private static TEntity Create(string json)
+        private static TEntity CreateEntityFromJson(string json, Encoding encoding)
         {
             // opt1:
             using (var memoryStream = new MemoryStream())
             {
-                byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+                byte[] jsonBytes = encoding.GetBytes(json);
                 memoryStream.Write(jsonBytes, 0, jsonBytes.Length);
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(
                     memoryStream,
-                    Encoding.UTF8,
+                    encoding,
                     XmlDictionaryReaderQuotas.Max,
                     null))
                 {
