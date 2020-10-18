@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ZanyBaka.Shared.Utils.Tests</AssemblyName>
+    <RootNamespace>ZanyBaka.Shared.Utils.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared.Utils.Desktop\Shared.Utils.Desktop.csproj" />
+    <ProjectReference Include="..\Shared.Utils.Lib\Shared.Utils.Lib.csproj" />
+    <ProjectReference Include="..\Shared.Utils.TestLib\Shared.Utils.TestLib.csproj" />
+    <ProjectReference Include="..\Shared.Utils.Web\Shared.Utils.Web.csproj" />
+  </ItemGroup>
+</Project>

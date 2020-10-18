@@ -1,2 +1,2 @@
-# DotNet.Shared.Utils
- A set of shared utils
+DotNet.Shared.Utils
+===
